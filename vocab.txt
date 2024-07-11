@@ -1,0 +1,70 @@
+0 minecraft:stone {} 691513
+1 minecraft:air {} 190512
+2 minecraft:dirt {} 50149
+3 minecraft:bedrock {} 44246
+4 minecraft:andesite {} 42693
+5 minecraft:diorite {} 40289
+6 minecraft:granite {} 38032
+7 minecraft:gravel {} 11758
+8 minecraft:grass_block {"snowy": "false"} 11375
+9 minecraft:coal_ore {} 11128
+10 minecraft:lava {} 6608
+11 minecraft:water {} 6530
+12 minecraft:iron_ore {} 6419
+13 minecraft:oak_leaves {} 5503
+14 minecraft:birch_leaves {} 2474
+15 minecraft:sand {} 2184
+16 minecraft:grass {} 1862
+17 minecraft:spruce_leaves {} 1729
+18 minecraft:redstone_ore {} 1621
+19 minecraft:gold_ore {} 576
+20 minecraft:oak_log {"axis": "y"} 423
+21 minecraft:birch_log {"axis": "y"} 319
+22 minecraft:oak_planks {} 284
+23 minecraft:spruce_log {"axis": "y"} 253
+24 minecraft:lapis_ore {} 247
+25 minecraft:diamond_ore {} 212
+26 minecraft:cobblestone {} 131
+27 minecraft:clay {} 101
+28 minecraft:cobweb {} 83
+29 minecraft:oak_fence {"east": "false", "waterlogged": "false", "south": "false", "north": "false", "west": "true"} 68
+30 minecraft:obsidian {} 66
+31 minecraft:fern {} 60
+32 minecraft:oak_fence {"east": "false", "waterlogged": "false", "south": "true", "north": "false", "west": "false"} 56
+33 minecraft:tall_grass {"half": "lower"} 55
+34 minecraft:tall_grass {"half": "upper"} 55
+35 minecraft:oak_fence {"east": "true", "waterlogged": "false", "south": "false", "north": "false", "west": "false"} 46
+36 minecraft:mossy_cobblestone {} 44
+37 minecraft:oak_log {"axis": "x"} 41
+38 minecraft:rail {"shape": "north_south"} 39
+39 minecraft:seagrass {} 35
+40 minecraft:oak_fence {"east": "false", "waterlogged": "false", "south": "false", "north": "true", "west": "false"} 34
+41 minecraft:infested_stone {} 31
+42 minecraft:oak_log {"axis": "z"} 30
+43 minecraft:rail {"shape": "east_west"} 27
+44 minecraft:poppy {} 25
+45 minecraft:dandelion {} 23
+46 minecraft:tall_seagrass {"half": "lower"} 18
+47 minecraft:tall_seagrass {"half": "upper"} 18
+48 minecraft:large_fern {"half": "lower"} 16
+49 minecraft:large_fern {"half": "upper"} 16
+50 minecraft:oak_fence {"east": "false", "waterlogged": "false", "south": "false", "north": "false", "west": "false"} 12
+51 minecraft:sunflower {} 12
+52 minecraft:cornflower {} 10
+53 minecraft:azure_bluet {} 9
+54 minecraft:oxeye_daisy {} 5
+55 minecraft:pink_tulip {} 5
+56 minecraft:brown_mushroom {} 4
+57 minecraft:lilac {"half": "lower"} 3
+58 minecraft:lilac {"half": "upper"} 3
+59 minecraft:peony {"half": "lower"} 3
+60 minecraft:peony {"half": "upper"} 3
+61 minecraft:emerald_ore {} 3
+62 minecraft:white_tulip {} 2
+63 minecraft:red_tulip {} 2
+64 minecraft:allium {} 2
+65 minecraft:lily_of_the_valley {} 2
+66 minecraft:spawner {} 2
+67 minecraft:orange_tulip {} 1
+68 minecraft:wall_torch {"facing": "north"} 1
+69 minecraft:chest {"waterlogged": "false", "facing": "north", "type": "single"} 1

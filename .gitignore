@@ -1,0 +1,6 @@
+.vscode/
+BlockEmbedding/
+PyAnvilEditor/
+__pycache__/
+saves/
+wandb/
