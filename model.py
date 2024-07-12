@@ -14,19 +14,20 @@ from lightning.pytorch.loggers import WandbLogger
 @dataclass
 class BlockEmbeddingParams:
     # skipgram parameters
-    CONTEXT_DISTANCE = 2  # window will be `(CONTEXT_DISTANCE * 2 + 1) ** 3`
+    CONTEXT_DISTANCE = 1  # window will be `(CONTEXT_DISTANCE * 2 + 1) ** 3`
 
     # model parameters
     VOCAB_SIZE = 70
-    EMBED_DIM = 50
+    EMBED_DIM = 3
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # training parameters
     SUBSAMPLING_T = 85
     SUBSAMPLING_UNKNOWN_WORD_FREQUENCY = 4680568 # about four times the total token for building the vocab, the rate of sampling unknown words can be a bit small
-    BATCH_SIZE = 4096
+    BATCH_SIZE = 8192
     N_EPOCHS = 5
     SAVE_EVERY_N_STEPS = 10000
+    TOTAL_STEP_ESTIMATE = 150000
 
     # dataset parameters
     MINECRAFT_WORLD_DIR = 'saves/TrainingWorld3'
@@ -53,10 +54,11 @@ class BlockEmbeddingModel(nn.Module):
 
 
 class LitBlockEmbeddingModel(L.LightningModule):
-    def __init__(self, model):
+    def __init__(self, model, params: BlockEmbeddingParams):
         super().__init__()
-        self.save_hyperparameters()
+        self.save_hyperparameters(ignore=['model'])
         self.model = model
+        self.params = params
 
     def training_step(self, batch, batch_idx):
         # training_step defines the train loop.
@@ -65,17 +67,22 @@ class LitBlockEmbeddingModel(L.LightningModule):
         x_hat = x_hat.view(x_hat.size(0), -1)
         loss = F.cross_entropy(x_hat, y)
         self.log("train_loss", loss)
+
+        sch = self.lr_schedulers()
+        sch.step()
+
         return loss
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters())
-        return optimizer
+        scheduler = torch.optim.lr_scheduler.LinearLR(optimizer, start_factor=1, end_factor=0, total_iters=params.TOTAL_STEP_ESTIMATE)
+        return [optimizer], [scheduler]
 
 
 class BlockDataset(IterableDataset):
-    def __init__(self, params: BlockEmbeddingParams, block_index_map):
+    def __init__(self, params: BlockEmbeddingParams, block_index_map, world):
         self.block_index_map = block_index_map
-        self.w = World(params.MINECRAFT_WORLD_DIR, write=False)
+        self.w = world
         self.vocab_size = params.VOCAB_SIZE
         self.offsets = []
         for dx in range(-params.CONTEXT_DISTANCE, params.CONTEXT_DISTANCE + 1):
@@ -106,7 +113,7 @@ class BlockDataset(IterableDataset):
         self.offset_i = (self.offset_i + 1) % len(self.offsets)
         if self.offset_i == 0:
             self.target_block_i += 1
-        if self.target_block_i % 500 == 0 and self.offset_i < 50:
+        if self.target_block_i % 1000 == 0 and self.offset_i < 1:
             print('Target block index:', self.target_block_i, self._get_target_block_coord(), 'context block offset:', self.offset_i)
 
         context_tensor = F.one_hot(torch.tensor(context_word_index), num_classes=self.vocab_size + 1)
@@ -209,15 +216,17 @@ def worker_init_fn(worker_id):
 
 
 if __name__ == '__main__':
+    torch.set_float32_matmul_precision('high')
     # dataset
     block_index_map = load_block_index_map()
-    dataset = BlockDataset(params, block_index_map)
+    world = World(params.MINECRAFT_WORLD_DIR, write=False)
+    dataset = BlockDataset(params, block_index_map, world)
     dataloader = DataLoader(dataset, batch_size=params.BATCH_SIZE,
                             num_workers=8, worker_init_fn=worker_init_fn)
 
     # model
     model = BlockEmbeddingModel(params)
-    lit_model = LitBlockEmbeddingModel(model)
+    lit_model = LitBlockEmbeddingModel(model, params)
 
     # train model
     checkpoint_callback = ModelCheckpoint(
